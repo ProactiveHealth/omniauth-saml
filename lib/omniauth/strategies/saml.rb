@@ -31,6 +31,8 @@ module OmniAuth
 
         response = OneLogin::RubySaml::Response.new(request.params['SAMLResponse'], options)
         response.settings = OneLogin::RubySaml::Settings.new(options)
+        
+        OmniAuth.logger.debug(response.inspect)
 
         @name_id = response.name_id
         @attributes = response.attributes
