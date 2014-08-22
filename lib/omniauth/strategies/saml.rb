@@ -20,8 +20,19 @@ module OmniAuth
 
         authn_request = OneLogin::RubySaml::Authrequest.new
         settings = OneLogin::RubySaml::Settings.new(options)
-
-        redirect(authn_request.create(settings, additional_params))
+                
+        #redirect(authn_request.create(settings, additional_params))
+        params = authn_request.create_params(settings, additional_params)
+        #OmniAuth.config.logger.debug(settings.idp_sso_target_url.inspect)
+        #OmniAuth.config.logger.debug(params.inspect)
+        #OmniAuth.config.logger.debug(Base64.decode64(params['SAMLRequest']))
+        post_request(settings.idp_sso_target_url, params)
+      end
+      
+      def post_request(url, params)
+        r = Rack::Response.new
+        r.write("<html><body><form method=\"post\" id=\"samlform\" action=\"#{url}\">\n<input type=\"hidden\" name=\"SAMLRequest\" value=\"#{params['SAMLRequest']}\" /><input type=\"submit\" value=\"Submit\" /></form></body><script type=\"text/javascript\">document.getElementById('samlform').submit();</script></html>")
+        r.finish
       end
 
       def callback_phase
