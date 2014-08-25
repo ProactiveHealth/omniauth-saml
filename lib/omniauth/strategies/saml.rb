@@ -23,7 +23,7 @@ module OmniAuth
         settings = OneLogin::RubySaml::Settings.new(options)
                 
         #redirect(authn_request.create(settings, additional_params))
-        uuid = UUID.new_generate
+        uuid = UUID.new.generate
         additional_params[:uri] = "_" + uuid         
         params = authn_request.create_params(settings, additional_params)
         #OmniAuth.config.logger.debug(settings.idp_sso_target_url.inspect)
