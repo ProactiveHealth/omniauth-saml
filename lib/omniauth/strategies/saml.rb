@@ -31,7 +31,7 @@ module OmniAuth
       
       def post_request(url, params)
         r = Rack::Response.new
-        r.write("<html><body><form method=\"post\" id=\"samlform\" action=\"#{url}\">\n<input type=\"hidden\" name=\"SAMLRequest\" value=\"#{params['SAMLRequest']}\" /><input type=\"submit\" value=\"Submit\" /></form></body><script type=\"text/javascript\">document.getElementById('samlform').submit();</script></html>")
+        r.write("<html><body><form method=\"post\" id=\"samlform\" action=\"#{url}\">\n<input type=\"hidden\" name=\"SAMLRequest\" value=\"#{params['SAMLRequest']}\" /></form></body><script type=\"text/javascript\">document.getElementById('samlform').submit();</script></html>")
         r.finish
       end
 
