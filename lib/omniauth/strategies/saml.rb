@@ -1,5 +1,6 @@
 require 'omniauth'
 require 'ruby-saml'
+require 'uuid'
 
 module OmniAuth
   module Strategies
@@ -22,16 +23,19 @@ module OmniAuth
         settings = OneLogin::RubySaml::Settings.new(options)
                 
         #redirect(authn_request.create(settings, additional_params))
+        uuid = UUID.new_generate
+        additional_params[:uri] = "_" + uuid         
         params = authn_request.create_params(settings, additional_params)
         #OmniAuth.config.logger.debug(settings.idp_sso_target_url.inspect)
         #OmniAuth.config.logger.debug(params.inspect)
         #OmniAuth.config.logger.debug(Base64.decode64(params['SAMLRequest']))
+        params['RelayState'] = uuid
         post_request(settings.idp_sso_target_url, params)
       end
       
       def post_request(url, params)
         r = Rack::Response.new
-        r.write("<html><body><form method=\"post\" id=\"samlform\" action=\"#{url}\">\n<input type=\"hidden\" name=\"SAMLRequest\" value=\"#{params['SAMLRequest']}\" /></form></body><script type=\"text/javascript\">document.getElementById('samlform').submit();</script></html>")
+        r.write("<html><body><form method=\"post\" id=\"samlform\" action=\"#{url}\">\n<input type=\"hidden\" name=\"SAMLRequest\" value=\"#{params['SAMLRequest']}\" /><input type=\"hidden\" name=\"RelayState\" value=\"#{params['RelayState']}\" /></form></body><script type=\"text/javascript\">document.getElementById('samlform').submit();</script></html>")
         r.finish
       end
 
