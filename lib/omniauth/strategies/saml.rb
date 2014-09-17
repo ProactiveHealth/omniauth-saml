@@ -31,6 +31,7 @@ module OmniAuth
         params['RelayState'] = uuid
         
         # TODO Support both redirect and POST
+        # How to select method?
         #redirect(authn_request.create(settings, additional_params))
         post_request(settings.idp_sso_target_url, params)
       end
