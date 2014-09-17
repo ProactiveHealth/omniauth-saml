@@ -22,7 +22,6 @@ module OmniAuth
         authn_request = OneLogin::RubySaml::Authrequest.new
         settings = OneLogin::RubySaml::Settings.new(options)
                 
-        #redirect(authn_request.create(settings, additional_params))
         uuid = UUID.new.generate
         additional_params[:uri] = "_" + uuid         
         params = authn_request.create_params(settings, additional_params)
@@ -30,6 +29,9 @@ module OmniAuth
         #OmniAuth.config.logger.debug(params.inspect)
         #OmniAuth.config.logger.debug(Base64.decode64(params['SAMLRequest']))
         params['RelayState'] = uuid
+        
+        # TODO Support both redirect and POST
+        #redirect(authn_request.create(settings, additional_params))
         post_request(settings.idp_sso_target_url, params)
       end
       
